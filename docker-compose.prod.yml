@@ -1,0 +1,37 @@
+version: '3.8'
+
+# 生产环境配置
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production  # 生产环境使用production阶段
+    container_name: chat2cartoon-frontend-prod
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    networks:
+      - chat2cartoon-network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: production  # 生产环境使用production阶段
+    container_name: chat2cartoon-backend-prod
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    environment:
+      - PYTHON_ENV=production
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8000
+      - AI_API_KEY=${AI_API_KEY}
+      - AI_API_BASE_URL=${AI_API_BASE_URL}
+    networks:
+      - chat2cartoon-network
+    restart: unless-stopped
+
+networks:
+  chat2cartoon-network:
+    driver: bridge

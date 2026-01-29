@@ -1,0 +1,23 @@
+# EditorConfig 配置 - 便于AI代码生成保持一致的格式
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{js,jsx,ts,tsx,json}]
+indent_style = space
+indent_size = 2
+
+[*.{py}]
+indent_style = space
+indent_size = 4
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

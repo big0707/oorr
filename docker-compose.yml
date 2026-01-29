@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development  # 开发环境使用development阶段
+    container_name: chat2cartoon-frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # 避免覆盖容器内的node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - chat2cartoon-network
+    restart: unless-stopped
+
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development  # 开发环境使用development阶段
+    container_name: chat2cartoon-backend
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - PYTHON_ENV=development
+      - BACKEND_HOST=0.0.0.0
+      - BACKEND_PORT=8000
+      - FLASK_ENV=development
+      # 从.env文件加载其他环境变量
+      - AI_API_KEY=${AI_API_KEY:-}
+      - AI_API_BASE_URL=${AI_API_BASE_URL:-}
+    networks:
+      - chat2cartoon-network
+    restart: unless-stopped
+    # 开发环境支持热重载
+    command: python app.py
+
+  # 数据库服务（如需要，取消注释）
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: chat2cartoon-db
+  #   environment:
+  #     - POSTGRES_DB=chat2cartoon
+  #     - POSTGRES_USER=user
+  #     - POSTGRES_PASSWORD=password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - chat2cartoon-network
+  #   restart: unless-stopped
+
+  # Redis服务（如需要，取消注释）
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: chat2cartoon-redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - chat2cartoon-network
+  #   restart: unless-stopped
+
+networks:
+  chat2cartoon-network:
+    driver: bridge
+
+volumes:
+  # postgres_data:  # 数据库持久化存储
