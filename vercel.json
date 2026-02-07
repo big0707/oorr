@@ -20,5 +20,11 @@
   },
   "env": {
     "PYTHON_VERSION": "3.9"
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/supabase-keepalive",
+      "schedule": "0 0 */6 * *"
+    }
+  ]
 }
