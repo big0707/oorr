@@ -1,0 +1,28 @@
+# Vercel 环境变量配置（本地副本）
+# 
+# ⚠️ 注意：这个文件包含敏感信息，不要提交到 Git！
+# 
+# 使用方法：
+# 1. 复制此文件为 vercel-env-vars.local.txt（不会被 Git 跟踪）
+# 2. 填入你的真实值
+# 3. 在 Vercel Dashboard 中设置这些环境变量
+
+# ============================================
+# 前端环境变量（必须以 VITE_ 开头）
+# ============================================
+
+VITE_FIREBASE_API_KEY=AIzaSyD6Rv5KGv-yE4XDX7hcPZa8eNJz3FiNg-4
+VITE_FIREBASE_AUTH_DOMAIN=oorr-a3cb9.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=oorr-a3cb9
+VITE_FIREBASE_STORAGE_BUCKET=oorr-a3cb9.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=521800009340
+VITE_FIREBASE_APP_ID=1:521800009340:web:7c0e58e6f454663bb1abf9
+
+# ============================================
+# 后端环境变量（用于 Serverless Functions）
+# ============================================
+
+# FIREBASE_CREDENTIALS_JSON 需要从 firebase-service-account.json 文件获取
+# 运行以下命令生成压缩后的 JSON：
+# cat firebase-service-account.json | jq -c .
+FIREBASE_CREDENTIALS_JSON={"type":"service_account","project_id":"oorr-a3cb9","private_key_id":"...","private_key":"...","client_email":"...","client_id":"...","auth_uri":"...","token_uri":"...","auth_provider_x509_cert_url":"...","client_x509_cert_url":"...","universe_domain":"googleapis.com"}

@@ -37,3 +37,13 @@ Thumbs.db
 # 临时文件
 *.tmp
 *.temp
+
+# Firebase 服务账号密钥（敏感信息，不要提交）
+firebase-service-account.json
+**/firebase-service-account.json
+*.firebase-service-account.json
+
+# 包含真实环境变量的文件（本地使用，不要提交）
+vercel-env-vars.local.txt
+.env.local
+vercel-env-vars.local.txt
