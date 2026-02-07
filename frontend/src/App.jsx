@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import { API_BASE_URL } from './lib/supabase';
+import { API_BASE_URL } from './lib/api';
 
 function App() {
   const [message, setMessage] = useState('');
