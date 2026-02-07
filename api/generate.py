@@ -5,9 +5,43 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
+from supabase import create_client, Client
 
-# Supabase 已移除，不再需要导入
-# 如果需要数据库功能，可以使用 Firebase Firestore 或其他数据库
+
+def get_supabase_client() -> Client:
+    """
+    获取 Supabase 客户端
+    
+    注意：Supabase 免费版在 7 天不活跃后会自动暂停
+    如果 Supabase 被暂停，此函数会抛出异常
+    """
+    supabase_url = os.environ.get('SUPABASE_URL')
+    supabase_key = os.environ.get('SUPABASE_ANON_KEY')
+    
+    if not supabase_url or not supabase_key:
+        raise ValueError('Supabase 配置缺失，请设置 SUPABASE_URL 和 SUPABASE_ANON_KEY')
+    
+    return create_client(supabase_url, supabase_key)
+
+
+def check_supabase_health():
+    """
+    检查 Supabase 健康状态
+    
+    返回: (healthy: bool, error: str or None)
+    """
+    try:
+        supabase = get_supabase_client()
+        # 尝试一个简单的查询
+        # 如果项目被暂停，会返回连接错误
+        result = supabase.table('_health_check').select('*').limit(0).execute()
+        return True, None
+    except Exception as e:
+        error_msg = str(e)
+        # 检查是否是暂停相关的错误
+        if 'paused' in error_msg.lower() or '暂停' in error_msg or 'connection' in error_msg.lower():
+            return False, f'Supabase 项目可能已暂停（7天不活跃会自动暂停）。请访问 https://app.supabase.com 恢复项目。错误: {error_msg}'
+        return False, f'Supabase 连接失败: {error_msg}'
 
 
 class handler(BaseHTTPRequestHandler):
@@ -40,16 +74,27 @@ class handler(BaseHTTPRequestHandler):
             # 这里可以调用AI图像/视频生成API
             
             # 可选：将生成任务保存到 Supabase
+            # 注意：如果 Supabase 被暂停，此操作会失败但不会影响主流程
             # try:
-            #     supabase = get_supabase_client()
-            #     supabase.table('generation_tasks').insert({
-            #         'prompt': prompt,
-            #         'style': style,
-            #         'format': format_type,
-            #         'status': 'generating'
-            #     }).execute()
+            #     healthy, error = check_supabase_health()
+            #     if not healthy:
+            #         print(f'⚠️ Supabase 健康检查失败: {error}')
+            #         # 可以选择记录到日志或发送通知
+            #     else:
+            #         supabase = get_supabase_client()
+            #         supabase.table('generation_tasks').insert({
+            #             'prompt': prompt,
+            #             'style': style,
+            #             'format': format_type,
+            #             'status': 'generating'
+            #         }).execute()
             # except Exception as e:
-            #     print(f'保存生成任务失败: {str(e)}')
+            #     error_msg = str(e)
+            #     if 'paused' in error_msg.lower() or '暂停' in error_msg:
+            #         print(f'⚠️ Supabase 项目已暂停: {error_msg}')
+            #         print('提示：请访问 https://app.supabase.com 恢复项目')
+            #     else:
+            #         print(f'保存生成任务失败: {error_msg}')
             
             response_data = {
                 'prompt': prompt,
