@@ -5,18 +5,9 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import os
-from supabase import create_client, Client
 
-
-def get_supabase_client() -> Client:
-    """获取 Supabase 客户端"""
-    supabase_url = os.environ.get('SUPABASE_URL')
-    supabase_key = os.environ.get('SUPABASE_ANON_KEY')
-    
-    if not supabase_url or not supabase_key:
-        raise ValueError('Supabase 配置缺失，请设置 SUPABASE_URL 和 SUPABASE_ANON_KEY')
-    
-    return create_client(supabase_url, supabase_key)
+# Supabase 已移除，不再需要导入
+# 如果需要数据库功能，可以使用 Firebase Firestore 或其他数据库
 
 
 class handler(BaseHTTPRequestHandler):
