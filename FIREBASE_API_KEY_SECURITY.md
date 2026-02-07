@@ -31,12 +31,27 @@ Firebase API Key 是公开的（前端代码中会使用），但我们可以通
 
 ### 步骤 4: 设置 API Key 限制
 
-1. 在 API Key 旁边，点击 **API Key** 链接（或者点击 API Key 本身）
-   - 这会打开 Google Cloud Console 的 API 凭证页面
+**⚠️ 重要说明：**
+Firebase API Key 的管理实际上在 Google Cloud Console 中（因为 Firebase 是 Google 的产品），但操作很简单！
 
-2. 在 Google Cloud Console 中：
-   - 找到你的 API Key：`AIzaSyD6Rv5KGv-yE4XDX7hcPZa8eNJz3FiNg-4`
-   - 点击 API Key 名称进入编辑页面
+**方法 1: 从 Firebase Console 直接跳转（推荐）**
+
+1. 在 Firebase Console 的 Web App 详情页面
+2. 找到 **API Key** 字段
+3. 点击 API Key 值本身（`AIzaSyD6Rv5KGv-yE4XDX7hcPZa8eNJz3FiNg-4`）
+   - 这会**自动跳转**到 Google Cloud Console 的编辑页面
+   - 你不需要手动找，点击就会跳转！
+
+**方法 2: 直接访问（如果方法 1 不行）**
+
+直接打开这个链接（会自动跳转到你的 API Key 设置）：
+```
+https://console.cloud.google.com/apis/credentials?project=oorr-a3cb9
+```
+
+然后：
+1. 找到 API Key：`AIzaSyD6Rv5KGv-yE4XDX7hcPZa8eNJz3FiNg-4`
+2. 点击 API Key 名称进入编辑页面
 
 3. 在 **Application restrictions**（应用限制）部分：
    - 选择 **HTTP referrers (web sites)**（HTTP 引用来源（网站））
