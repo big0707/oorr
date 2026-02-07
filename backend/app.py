@@ -6,6 +6,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from auth import require_auth
 
 # 加载环境变量
 load_dotenv()
@@ -30,12 +31,18 @@ def health_check():
 
 
 @app.route('/api/chat', methods=['POST'])
+@require_auth
 def chat():
     """
     处理聊天请求，生成卡通
+    需要用户登录认证
     便于AI video coding：清晰的接口定义和错误处理
     """
     try:
+        # 获取当前登录用户信息
+        user_id = request.user.get('uid')
+        user_email = request.user.get('email', '未知用户')
+        
         data = request.get_json()
         message = data.get('message', '')
         
@@ -50,6 +57,8 @@ def chat():
             'message': message,
             'status': 'processing',
             'result': None,
+            'user_id': user_id,
+            'user_email': user_email,
             # 'cartoon_url': '生成的卡通图片URL',
             # 'video_url': '生成的视频URL（如果支持）',
         }
@@ -65,12 +74,18 @@ def chat():
 
 
 @app.route('/api/generate', methods=['POST'])
+@require_auth
 def generate():
     """
     生成卡通图像/视频
+    需要用户登录认证
     便于AI video coding：支持多种生成模式
     """
     try:
+        # 获取当前登录用户信息
+        user_id = request.user.get('uid')
+        user_email = request.user.get('email', '未知用户')
+        
         data = request.get_json()
         prompt = data.get('prompt', '')
         style = data.get('style', 'cartoon')
@@ -88,6 +103,8 @@ def generate():
             'format': format_type,
             'status': 'generating',
             'result_url': None,
+            'user_id': user_id,
+            'user_email': user_email,
         }
         
         return jsonify(response_data), 200

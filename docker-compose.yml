@@ -12,10 +12,17 @@ services:
       - "${FRONTEND_PORT:-3000}:3000"
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # 避免覆盖容器内的node_modules
+      - node_modules:/app/node_modules  # 避免覆盖容器内的node_modules
     environment:
       - NODE_ENV=development
       - VITE_API_BASE_URL=http://localhost:8000
+      # Firebase 前端配置（从 .env 文件加载）
+      - VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY:-}
+      - VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN:-}
+      - VITE_FIREBASE_PROJECT_ID=${VITE_FIREBASE_PROJECT_ID:-}
+      - VITE_FIREBASE_STORAGE_BUCKET=${VITE_FIREBASE_STORAGE_BUCKET:-}
+      - VITE_FIREBASE_MESSAGING_SENDER_ID=${VITE_FIREBASE_MESSAGING_SENDER_ID:-}
+      - VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID:-}
     depends_on:
       - backend
     networks:
@@ -41,6 +48,9 @@ services:
       # 从.env文件加载其他环境变量
       - AI_API_KEY=${AI_API_KEY:-}
       - AI_API_BASE_URL=${AI_API_BASE_URL:-}
+      # Firebase 后端配置
+      - FIREBASE_CREDENTIALS_PATH=${FIREBASE_CREDENTIALS_PATH:-}
+      - FIREBASE_CREDENTIALS_JSON=${FIREBASE_CREDENTIALS_JSON:-}
     networks:
       - chat2cartoon-network
     restart: unless-stopped
@@ -76,4 +86,5 @@ networks:
     driver: bridge
 
 volumes:
+  node_modules:  # 前端 node_modules 匿名卷
   # postgres_data:  # 数据库持久化存储
